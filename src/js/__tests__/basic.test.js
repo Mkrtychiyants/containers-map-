@@ -14,13 +14,13 @@ const err3 = {
 };
 
 const rep1 = new ErrorRepository();
-  
+
 rep1.add(err1.num, err1.value);
 rep1.add(err2.num, err2.value);
 rep1.add(err3.num, err3.value);
 
 test('map test', () => {
   expect(rep1.add(err1.num, err1.value)).toMatch('character1');
-  expect(() => ( rep1.translate(4))).toThrow(Error);
+  expect(() => (rep1.translate(4))).toThrow(Error);
   expect(rep1.translate(err3.num)).toMatch('character3');
 });
