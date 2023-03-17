@@ -4,62 +4,38 @@
 
 // TODO: write your code in app.js
 
-class ErrorRepository {
+class Settings {
   constructor() {
-    this.errorLog = new Map();
+    this.defaultSet = new Map([
+      ['theme', ['dark', 'light', 'gray']],
+      ['music', ['trance', 'pop', 'rock', 'chillout', 'off']],
+      ['difficulty', ['easy', 'normal', 'hard', 'nightmare']],
+    ]);
+    this.playaSet = new Map();
   }
 
-  add(errorCode, errorDescr) {
-    if (!this.errorLog.has(errorCode)) {
-      return this.errorLog.set(errorCode, errorDescr);
-    } return this.errorLog.get(errorCode);
-  }
-
-  translate(errorCode) {
-    if (this.errorLog.has(errorCode)) {
-      return this.errorLog.get(errorCode);
+  setPlayerSetting(name, value) {
+    if (this.defaultSet.has(name)) {
+      if (this.defaultSet.get(name).includes(value)) {
+        this.playaSet.set(name, value);
+      }
+    } else {
+      throw new Error('Invalid settings');
     }
-    throw new Error('Unknown error');
+  }
+
+  get settings() {
+    if (this.defaultSet.size !== this.playaSet.size) {
+      for (const opt of this.defaultSet.keys()) {
+        if (!this.playaSet.has(opt)) {
+          this.playaSet.set(opt, this.defaultSet.get(opt)[0]);
+        }
+      }
+    }
+    return this.playaSet;
   }
 }
 
-const err1 = {
-  value: 'character1',
-  num: 1,
-};
-const err2 = {
-  value: 'character2',
-  num: 2,
-};
-const err3 = {
-  value: 'character3',
-  num: 3,
-};
-
-const rep1 = new ErrorRepository();
-
-rep1.add(err1.num, err1.value);
-console.log('err1 added');
-console.log(rep1.errorLog.size);
-console.log('err size');
-
-rep1.add(err1.num, err1.value);
-console.log('err1 second add');
-
-console.log(rep1.errorLog.size);
-rep1.add(err2.num, err2.value);
-rep1.add(err3.num, err3.value);
-console.log('err2 err3 add');
-for (const vegetable of rep1.errorLog.values()) {
-  console.log(vegetable); // огурец, помидор, лук
-}
-console.log(rep1.errorLog.size);
-
-rep1.translate(err3.num);
-console.log(rep1.translate(err3.num));
-console.log('err3 translate');
-
-rep1.translate(4);
-console.log('err4 translate');
-
-console.log(rep1.size);
+const rep1 = new Settings();
+rep1.setPlayerSetting('theme', 'light');
+console.log(rep1.settings.get('theme'));
